@@ -142,3 +142,22 @@ npm run build       # vite build + ait build → holiday-care.ait
 - 운영시간은 기관이 등록한 값이라 실제와 다를 수 있어요. 화면에 안내 문구를 넣어뒀어요.
 - 공공데이터에 해당 요일 정보가 없으면 "휴무"로 단정하지 않고 "정보 없음"으로 표시해요.
 - 위치 권한을 거부해도 동 이름 검색으로 모든 기능을 쓸 수 있어요.
+
+## GitHub Pages 배포
+
+같은 코드로 웹 버전도 만들어요. 미니앱은 도메인 루트에서 돌고 Pages 는 하위 경로에
+올라가서 `base` 만 다릅니다.
+
+```bash
+npm run build        # 미니앱용 (base '/')      → holiday-care.ait
+npm run build:web    # Pages 용 (base '/openpharm/') → dist/
+node scripts/preview-web.mjs   # 배포본을 실제 경로 그대로 확인
+```
+
+`main` 에 푸시하면 `.github/workflows/deploy-pages.yml` 이 빌드해서 Pages 에 올려요.
+저장소 `Settings > Pages > Source` 를 **GitHub Actions** 로 한 번만 바꿔주면 됩니다.
+
+배포 주소: https://kjnewsletter.github.io/openpharm/
+
+> 카카오맵을 웹에서도 쓰려면 카카오 콘솔 `앱 설정 > 플랫폼 > Web` 에
+> `https://kjnewsletter.github.io` 를 추가해야 해요. 없으면 기본 지도로 나옵니다.
