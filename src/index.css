@@ -1,15 +1,21 @@
 :root {
-  font-family: sans-serif;
+  /* 토스 앱 안에서는 시스템 한글 폰트가 가장 자연스럽고,
+     웹에서도 별도 폰트를 받지 않아 첫 화면이 빨리 뜬다. */
+  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Pretendard,
+    'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--adaptiveBackground, #ffffff);
 }
 
 @media (min-width: 481px) {

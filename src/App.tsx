@@ -1,7 +1,7 @@
 import { adaptive } from '@toss/tds-colors';
-import { Top } from '@toss/tds-mobile';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { AppHeader } from './components/AppHeader';
 import { AreaSearch } from './components/AreaSearch';
 import { DateButton } from './components/DateButton';
 import { DateSheet } from './components/DateSheet';
@@ -212,14 +212,9 @@ export default function App() {
 
   return (
     <div style={{ paddingBottom: 40, background: adaptive.background, minHeight: '100vh' }}>
-      <Top
-        title={<Top.TitleParagraph size={22}>연휴 약국·병원 찾기</Top.TitleParagraph>}
-        subtitleBottom={
-          <Top.SubtitleParagraph size={15}>
-            공휴일에 문 여는 약국과 병·의원을 동 이름으로 찾아보세요.
-            {COVERAGE_SHORT ? ` 지금은 ${COVERAGE_SHORT}를 담고 있어요.` : ''}
-          </Top.SubtitleParagraph>
-        }
+      <AppHeader
+        title="연휴 약국·병원 찾기"
+        subtitle={`공휴일에 문 여는 약국과 병·의원을 동 이름으로 찾아보세요.${COVERAGE_SHORT ? ` 지금은 ${COVERAGE_SHORT}를 담고 있어요.` : ''}`}
       />
 
       <Banner />
