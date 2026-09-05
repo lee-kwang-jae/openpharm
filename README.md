@@ -53,16 +53,30 @@ SYNC_REGIONS="경기도 하남시,서울특별시 강동구" npm run sync:data
 
 ### 2. 카카오맵 JavaScript 키
 
-[developers.kakao.com](https://developers.kakao.com) → 내 애플리케이션 → 앱 키 → **JavaScript 키**.
-`플랫폼 > Web`에 아래 도메인을 모두 등록해야 지도가 뜹니다.
+[앱 관리 페이지](https://developers.kakao.com/console/app)에서 앱을 고른 뒤, 지도가 뜨려면
+**두 가지**를 모두 해야 합니다. 하나만 해도 지도는 안 뜨고 기본 지도(OpenStreetMap)로 대체돼요.
+
+1. `[카카오맵] > [사용 설정]`의 `[상태]`를 **ON**
+   - 카카오맵 무료 쿼터는 개발자 계정에서 **가장 먼저 활성화한 앱 1개**에만 붙습니다.
+     두 번째 앱부터는 비즈월렛 연결 + 유료 API 설정이 필요해요.
+2. `[앱] > [플랫폼 키] > [JavaScript 키]`를 열어 `[JavaScript SDK 도메인]`에 아래를 모두 등록
 
 ```
 http://localhost:5173
+http://localhost:4173
 https://holiday-care.apps.tossmini.com
 https://holiday-care.private-apps.tossmini.com
+https://kjnewsletter.github.io
 ```
 
-`제품 설정 > 카카오맵`도 **ON**으로 켜주세요.
+설정을 마쳤으면 아래 명령으로 확인하세요. 어느 쪽이 빠졌는지 짚어줍니다.
+
+```bash
+npm run check:kakao
+```
+
+> 브라우저는 카카오 SDK 응답을 CORS 때문에 읽을 수 없어서, 앱 화면에서는 "지도를
+> 불러오지 못했어요"까지만 알 수 있어요. 사유는 이 명령으로 확인합니다.
 
 ### 3. `.env` 작성
 

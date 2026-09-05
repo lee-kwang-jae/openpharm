@@ -42,8 +42,10 @@ function markerHtml(place: Place, selected: boolean) {
   const scale = selected ? 1.15 : 1;
   const trimmed = place.name.length > 9 ? `${place.name.slice(0, 8)}…` : place.name;
   const label = escapeHtml(trimmed);
+  // 좌우/상하 정렬은 CustomOverlay 의 xAnchor(기본 0.5)·yAnchor 가 맡는다.
+  // 여기서 translate 까지 걸면 이름표가 한 칸씩 밀린다.
   return `
-    <div style="transform:translate(-50%,-100%) scale(${scale});transform-origin:bottom center;cursor:pointer;text-align:center;">
+    <div style="transform:scale(${scale});transform-origin:bottom center;cursor:pointer;text-align:center;">
       <div style="
         display:inline-block;max-width:120px;padding:3px 8px;border-radius:12px;
         background:${selected ? color : '#FFFFFF'};color:${selected ? '#FFFFFF' : '#222429'};
@@ -60,6 +62,8 @@ export function PlaceMap({ center, places, selectedId, onSelect, height, level =
   const overlaysRef = useRef<any[]>([]);
   const onSelectRef = useRef(onSelect);
   const [error, setError] = useState<string | null>(null);
+  // 카카오 콘솔 설정을 고친 뒤 앱을 다시 켜지 않고도 지도를 붙여볼 수 있게 한다.
+  const [attempt, setAttempt] = useState(0);
 
   onSelectRef.current = onSelect;
 
@@ -85,7 +89,7 @@ export function PlaceMap({ center, places, selectedId, onSelect, height, level =
     };
     // center 는 아래 effect 에서 따로 반영한다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [attempt]);
 
   useEffect(() => {
     const maps = window.kakao?.maps;
@@ -147,9 +151,13 @@ export function PlaceMap({ center, places, selectedId, onSelect, height, level =
         initialZoom={18 - level}
         notice={
           import.meta.env.DEV
-            ? '카카오맵 미연결 — 콘솔에 확인할 항목을 적어뒀어요. 지금은 기본 지도예요.'
+            ? '카카오맵 미연결 — npm run check:kakao 로 사유를 확인하세요. 지금은 기본 지도예요.'
             : '기본 지도로 보여주고 있어요.'
         }
+        onRetry={() => {
+          setError(null);
+          setAttempt((count) => count + 1);
+        }}
       />
     );
   }

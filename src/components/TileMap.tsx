@@ -54,9 +54,20 @@ interface Props {
   initialZoom?: number;
   /** 지도 위에 띄울 안내 문구 (카카오맵 실패 사유 등) */
   notice?: string;
+  /** 주면 안내 문구 옆에 카카오맵 재시도 버튼이 붙는다. */
+  onRetry?: () => void;
 }
 
-export function TileMap({ center, places, selectedId, onSelect, height, initialZoom = 14, notice }: Props) {
+export function TileMap({
+  center,
+  places,
+  selectedId,
+  onSelect,
+  height,
+  initialZoom = 14,
+  notice,
+  onRetry,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 375, height });
   const [view, setView] = useState<LatLng>(center);
@@ -296,6 +307,25 @@ export function TileMap({ center, places, selectedId, onSelect, height, initialZ
           }}
         >
           {notice}
+          {onRetry ? (
+            <button
+              type="button"
+              onClick={onRetry}
+              style={{
+                marginLeft: 6,
+                padding: 0,
+                border: 'none',
+                background: 'none',
+                color: adaptive.blue500,
+                fontSize: 11,
+                fontWeight: 700,
+                lineHeight: '15px',
+                cursor: 'pointer',
+              }}
+            >
+              다시 시도
+            </button>
+          ) : null}
         </div>
       ) : null}
 
