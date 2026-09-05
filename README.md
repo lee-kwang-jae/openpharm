@@ -64,8 +64,6 @@ SYNC_REGIONS="경기도 하남시,서울특별시 강동구" npm run sync:data
 ```
 http://localhost:5173
 http://localhost:4173
-https://holiday-care.apps.tossmini.com
-https://holiday-care.private-apps.tossmini.com
 https://kjnewsletter.github.io
 ```
 

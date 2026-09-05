@@ -16,13 +16,14 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SDK = 'https://dapi.kakao.com/v2/maps/sdk.js';
 
-/** 지도가 떠야 하는 곳들. 하나라도 빠지면 그 화면만 기본 지도로 대체된다. */
+/**
+ * 지도가 떠야 하는 곳들. 하나라도 빠지면 그 화면만 기본 지도로 대체된다.
+ * 배포처는 GitHub Pages 한 곳이다. (앱인토스에는 등록하지 않기로 했다)
+ */
 const ORIGINS = [
   { url: 'http://localhost:5173', label: '로컬 개발 (npm run dev)' },
   { url: 'http://localhost:4173', label: '웹 배포 미리보기 (npm run build:web)' },
-  { url: 'https://holiday-care.apps.tossmini.com', label: '앱인토스 배포본' },
-  { url: 'https://holiday-care.private-apps.tossmini.com', label: '앱인토스 검토/테스트본' },
-  { url: 'https://kjnewsletter.github.io', label: 'GitHub Pages 웹 버전' },
+  { url: 'https://kjnewsletter.github.io', label: 'GitHub Pages 배포본' },
 ];
 
 async function loadKey() {
