@@ -22,7 +22,7 @@ const SDK = 'https://dapi.kakao.com/v2/maps/sdk.js';
  */
 const ORIGINS = [
   { url: 'http://localhost:5173', label: '로컬 개발 (npm run dev)' },
-  { url: 'http://localhost:4173', label: '웹 배포 미리보기 (npm run build:web)' },
+  { url: 'http://localhost:4173', label: '배포본 미리보기 (npm run preview)' },
   { url: 'https://kjnewsletter.github.io', label: 'GitHub Pages 배포본' },
 ];
 

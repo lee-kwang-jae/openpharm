@@ -1,7 +1,9 @@
 # 연휴 약국·병원 찾기 (holiday-care)
 
-공휴일·연휴에 문 여는 약국과 병·의원을 **동 이름으로** 찾아보는 앱인토스 미니앱이에요.
+공휴일·연휴에 문 여는 약국과 병·의원을 **동 이름으로** 찾아보는 웹 앱이에요.
 지도와 목록을 함께 보여주고, 날짜를 골라 그날의 운영 여부를 확인할 수 있어요.
+
+배포 주소: **https://kjnewsletter.github.io/openpharm/**
 
 ## 서비스 지역
 
@@ -127,10 +129,9 @@ E-Gen의 `dutyTime8`(공휴일)은 **약국 24% · 병의원 12%만** 등록돼 
 다만 "정보가 없다"와 "쉰다"는 다르므로, 해당 요일 값이 비면 휴무로 단정하지 않고
 `정보 없음` 또는 `휴무일 수 있음`으로 표시해요.
 
-## 앱인토스 정책 준수
+## 의료 정보 표시 원칙
 
-의료 정보 서비스는 [오픈 정책](https://developers-apps-in-toss.toss.im/intro/guide.html)상 조건부 허용이에요.
-이 앱은 아래를 지키도록 설계했어요.
+기관을 줄 세우지 않는다는 원칙으로 만들었어요. 코드에도 그대로 반영돼 있습니다.
 
 - 공공데이터 기반 **조회만** 제공 — 예약·진료 연결·상담 기능 없음
 - **순위·추천 없음** — 정렬 기준은 "선택한 동 중심에서 가까운 순" 하나뿐이고 화면에 명시
@@ -138,38 +139,46 @@ E-Gen의 `dutyTime8`(공휴일)은 **약국 24% · 병의원 12%만** 등록돼 
 - **데이터 출처를 화면 하단에 상시 표시**
 - 병원으로부터 **어떠한 금전도 수취하지 않음**
 
-## 빌드 / 배포
-
-```bash
-npm run build       # vite build + ait build → holiday-care.ait
-```
-
-생성된 `.ait` 파일을 앱인토스 콘솔 `앱 출시`에 업로드 → QR 테스트 → 검토 요청.
-
-> `apps-in-toss.config.ts`의 `appName`은 콘솔 등록값과 **정확히** 일치해야 해요.
-> 현재 값: `holiday-care`
-
 ## 알려진 제약
 
 - 운영시간은 기관이 등록한 값이라 실제와 다를 수 있어요. 화면에 안내 문구를 넣어뒀어요.
 - 공공데이터에 해당 요일 정보가 없으면 "휴무"로 단정하지 않고 "정보 없음"으로 표시해요.
 - 위치 권한을 거부해도 동 이름 검색으로 모든 기능을 쓸 수 있어요.
 
-## GitHub Pages 배포
+## 빌드 / 배포
 
-같은 코드로 웹 버전도 만들어요. 미니앱은 도메인 루트에서 돌고 Pages 는 하위 경로에
-올라가서 `base` 만 다릅니다.
+배포처는 GitHub Pages 한 곳이에요.
 
 ```bash
-npm run build        # 미니앱용 (base '/')      → holiday-care.ait
-npm run build:web    # Pages 용 (base '/openpharm/') → dist/
-node scripts/preview-web.mjs   # 배포본을 실제 경로 그대로 확인
+npm run build     # tsc -b + vite build → dist/ (base '/openpharm/')
+npm run preview   # 배포본을 실제 경로 그대로 확인 → http://localhost:4173/openpharm/
 ```
 
-`main` 에 푸시하면 `.github/workflows/deploy-pages.yml` 이 빌드해서 Pages 에 올려요.
-저장소 `Settings > Pages > Source` 를 **GitHub Actions** 로 한 번만 바꿔주면 됩니다.
+`main` 에 푸시하면 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) 이
+lint → 빌드 → 결과물 검증 → 배포까지 합니다.
 
-배포 주소: https://kjnewsletter.github.io/openpharm/
+### 처음 한 번만: Pages 게시 방식
 
-> 카카오맵을 웹에서도 쓰려면 카카오 콘솔 `앱 설정 > 플랫폼 > Web` 에
-> `https://kjnewsletter.github.io` 를 추가해야 해요. 없으면 기본 지도로 나옵니다.
+저장소 `Settings > Pages > Build and deployment > Source` 를 **`GitHub Actions`** 로 바꿔야 해요.
+
+`Deploy from a branch` 로 두면 GitHub 내장 Jekyll 빌더가 **저장소 루트를 가공 없이**
+퍼블리시합니다. 그러면 빌드 전 `index.html` 이 그대로 올라가고, 브라우저가
+`/src/main.tsx` 를 404 로 받아 **화면이 통째로 빕니다.** 워크플로가 성공해도
+그 결과를 덮어써 버려서 겉으로는 배포가 잘 된 것처럼 보여요.
+
+같은 사고를 다시 겪지 않도록 워크플로에 결과물 검증 단계를 넣어뒀습니다.
+`dist/index.html` 이 원본 소스를 가리키거나 base 가 안 붙으면 배포 전에 실패합니다.
+
+### base 경로
+
+저장소 이름 때문에 Pages 는 `/openpharm/` 하위에서 서비스돼요.
+`vite.config.ts` 가 dev 서버일 때만 `/`, 빌드할 때는 `/openpharm/` 를 붙입니다.
+다른 경로에 올릴 거면 `DEPLOY_BASE` 로 덮어쓰면 돼요.
+
+```bash
+DEPLOY_BASE=/다른경로/ npm run build
+```
+
+> 카카오맵이 배포본에서도 뜨려면 카카오 콘솔의 `[JavaScript SDK 도메인]` 에
+> `https://kjnewsletter.github.io` 가 있어야 해요. 없으면 기본 지도로 나옵니다.
+> 확인은 `npm run check:kakao`.

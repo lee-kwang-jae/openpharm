@@ -32,8 +32,26 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npx tsc -b
-      - run: npx vite build
+      - run: npm run lint
+      - run: npm run build
+
+      # 한 번 당한 적 있는 사고를 막는다. Pages 가 브랜치 방식(Jekyll)으로
+      # 저장소 루트를 그대로 퍼블리시하면 원본 index.html 이 올라가고,
+      # 브라우저가 /src/main.tsx 를 404 로 받아 화면이 통째로 빈다.
+      # 빌드 결과물이 맞는지 여기서 확인하고, 아니면 배포하지 않는다.
+      - name: 빌드 결과물 검증
+        run: |
+          test -f dist/index.html || { echo "dist/index.html 이 없어요."; exit 1; }
+          if grep -q '/src/main.tsx' dist/index.html; then
+            echo "dist/index.html 이 원본 소스를 가리키고 있어요. vite build 가 제대로 안 돌았습니다."
+            exit 1
+          fi
+          grep -q '/openpharm/assets/' dist/index.html || {
+            echo "자산 경로에 base(/openpharm/)가 안 붙었어요. DEPLOY_BASE 를 확인하세요."
+            exit 1
+          }
+          echo "확인 완료:"
+          cat dist/index.html
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

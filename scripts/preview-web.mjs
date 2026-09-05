@@ -5,7 +5,7 @@
  * dist 를 루트에 올려놓고 보면 자산 경로(/openpharm/assets/...)가 전부 404 난다.
  * 그래서 실제 배포와 같은 경로 구조로 흉내 내서 띄운다.
  *
- *   npm run build:web && node scripts/preview-web.mjs
+ *   npm run build && npm run preview
  *   → http://localhost:4173/openpharm/
  */
 import { createReadStream } from 'node:fs';

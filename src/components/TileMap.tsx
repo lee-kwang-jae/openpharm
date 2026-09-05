@@ -74,11 +74,14 @@ export function TileMap({
   const [zoom, setZoom] = useState(initialZoom);
   const dragRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
 
+  // 부모가 center 를 매번 새 객체로 넘겨서, 좌표값으로 풀어 두고 그걸 의존성으로 쓴다.
+  const { lat: centerLat, lng: centerLng } = center;
+
   // 지역을 새로 고르면 그쪽으로 옮겨가고, 축척도 그 단위에 맞춘다.
   useEffect(() => {
-    setView(center);
+    setView({ lat: centerLat, lng: centerLng });
     setZoom(initialZoom);
-  }, [center.lat, center.lng, initialZoom]);
+  }, [centerLat, centerLng, initialZoom]);
 
   useEffect(() => {
     const element = containerRef.current;

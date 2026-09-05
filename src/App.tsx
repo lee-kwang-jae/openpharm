@@ -449,7 +449,8 @@ export default function App() {
           originLabel={area?.label ?? ''}
           onClose={() => setSelectedId(null)}
           onCall={(place) => {
-            if (place.tel) void openTel(place.tel);
+            if (!place.tel) return;
+            void openTel(place.tel).catch(() => setToast('전화를 걸 수 없어요.'));
           }}
           onCopyAddress={(place) => {
             void copyText(place.address)
